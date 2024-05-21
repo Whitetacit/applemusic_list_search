@@ -1,0 +1,2 @@
+chrome.exe  --user-data-dir="(chrome_profile_derictory)"
+selenium==4.21.0

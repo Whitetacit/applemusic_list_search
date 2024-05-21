@@ -6,13 +6,14 @@ import time
 import difflib
 
 list_path = '' #歌单位置
+is_manual_takeover = True #无匹配结果时是否手动匹配
 
 path = r'' #chromedriver位置
-regular_expression = u'[\u4e00-\u9fa5]+' #匹配中文
+playlist = '' #播放列表
 profile_dir = r'' #chrome配置文件位置
+regular_expression = u'[\u4e00-\u9fa5]+' #匹配中文
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("user-data-dir="+os.path.abspath(profile_dir))
-playlist = '' #播放列表
 playlist_element = '//button[starts-with(@title,"'+playlist+'")]'
 
 service = Service(executable_path=path) #启动时使用已有配置文件
@@ -55,19 +56,19 @@ def search_music(name,artists):
                 is_found = True
                 break
     if not is_found:
-        print('匹配失败')
-        search_music_count = int(input('手动输入数字（从1开始，0代表无匹配）'))+1
-        while True:
-            if search_music_count == 0:
-                break
-            try:
-                find_music_xpath = music_dictionary[search_music_count]
-                break
-            except:
-                print('非法输入')
-        if search_music_count != 0:
-            add_playlist(find_music_xpath)
-
+        if is_manual_takeover:
+            print('匹配失败')
+            search_music_count = int(input('手动输入数字（从1开始，0代表无匹配）'))+1
+            while True:
+                if search_music_count == 0:
+                    break
+                try:
+                    find_music_xpath = music_dictionary[search_music_count]
+                    break
+                except:
+                    print('非法输入')
+            if search_music_count != 0:
+                add_playlist(find_music_xpath)
     time.sleep(1)
 
 def open_txt(path):
